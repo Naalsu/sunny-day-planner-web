@@ -78,7 +78,7 @@ export const getActivitySuggestions = (weather: WeatherDay): ActivitySuggestion[
     });
     suggestions.push({
       title: 'Movie Marathon',
-      description: 'Perfect day to watch that series you've been meaning to see.',
+      description: 'Perfect day to watch that series you\'ve been meaning to see.',
       icon: 'film'
     });
   }
