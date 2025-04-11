@@ -3,7 +3,7 @@ import React from 'react';
 import { WeatherDay } from '@/types/weatherTypes';
 import { getActivitySuggestions } from '@/utils/weatherUtils';
 import { 
-  Mountain, UmbrellaBeach, BookOpen, Film, 
+  Mountain, Umbrella, BookOpen, Film, 
   Coffee, Map, Wind, Heart 
 } from 'lucide-react';
 
@@ -19,7 +19,7 @@ const ActivitySuggestions: React.FC<ActivitySuggestionsProps> = ({ weatherDay })
       case 'mountain':
         return <Mountain className="h-5 w-5 text-green-600" />;
       case 'umbrella-beach':
-        return <UmbrellaBeach className="h-5 w-5 text-amber-500" />;
+        return <Umbrella className="h-5 w-5 text-amber-500" />;
       case 'book-open':
         return <BookOpen className="h-5 w-5 text-blue-500" />;
       case 'film':

@@ -1,4 +1,3 @@
-
 import { WeatherDay, ActivitySuggestion } from '@/types/weatherTypes';
 import { toast } from '@/hooks/use-toast';
 
@@ -65,7 +64,7 @@ export const getActivitySuggestions = (weather: WeatherDay): ActivitySuggestion[
     suggestions.push({
       title: 'Beach Day',
       description: 'Great weather for swimming or relaxing by the water.',
-      icon: 'umbrella-beach'
+      icon: 'umbrella'
     });
   }
   
