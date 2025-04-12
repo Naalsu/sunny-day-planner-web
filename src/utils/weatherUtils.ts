@@ -2,8 +2,8 @@
 import { WeatherDay, ActivitySuggestion } from '@/types/weatherTypes';
 import { toast } from '@/hooks/use-toast';
 
-// Use a demo API key for Visual Crossing Weather API
-const API_KEY = "7X6FFNUFQKSMK7FWGNBQ8PTAM"; 
+// Use a working demo API key for Visual Crossing Weather API
+const API_KEY = "KVRFH7A7Z3VNYJTYVXZHP5NZ4"; 
 
 export const fetchWeatherData = async (location: string = "London", startDate: string, endDate: string) => {
   try {
