@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { WeatherDay } from '@/types/weatherTypes';
 import { getActivitySuggestions } from '@/utils/weatherUtils';
@@ -18,7 +17,7 @@ const ActivitySuggestions: React.FC<ActivitySuggestionsProps> = ({ weatherDay })
     switch (iconName) {
       case 'mountain':
         return <Mountain className="h-5 w-5 text-green-600" />;
-      case 'umbrella-beach':
+      case 'umbrella':
         return <Umbrella className="h-5 w-5 text-amber-500" />;
       case 'book-open':
         return <BookOpen className="h-5 w-5 text-blue-500" />;
