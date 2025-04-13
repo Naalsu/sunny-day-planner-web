@@ -126,25 +126,30 @@ export const getWeatherIcon = (icon: string) => {
 };
 
 export const getActivitySuggestions = (weather: WeatherDay): ActivitySuggestion[] => {
-  const { temp, icon, windspeed, precipprob } = weather;
+  const { temp, conditions, windspeed, precipprob } = weather;
   const suggestions: ActivitySuggestion[] = [];
   
+  const conditionLower = conditions.toLowerCase();
+  
   // Sunny day suggestions
-  if (icon.includes('clear') && temp > 20 && precipprob < 20) {
+  if ((conditionLower.includes('clear') || conditionLower.includes('sun')) && temp > 15) {
     suggestions.push({
       title: 'Outdoor Adventure',
       description: 'Perfect day for hiking, biking, or a picnic in the park!',
       icon: 'mountain'
     });
-    suggestions.push({
-      title: 'Beach Day',
-      description: 'Great weather for swimming or relaxing by the water.',
-      icon: 'umbrella'
-    });
+    
+    if (temp > 20) {
+      suggestions.push({
+        title: 'Beach Day',
+        description: 'Great weather for swimming or relaxing by the water.',
+        icon: 'umbrella'
+      });
+    }
   }
   
   // Rainy day suggestions
-  if (icon.includes('rain') || precipprob > 50) {
+  if (conditionLower.includes('rain') || conditionLower.includes('drizzle') || precipprob > 40) {
     suggestions.push({
       title: 'Indoor Creativity',
       description: 'Stay dry with art projects, baking, or catching up on reading.',
@@ -154,6 +159,15 @@ export const getActivitySuggestions = (weather: WeatherDay): ActivitySuggestion[
       title: 'Movie Marathon',
       description: 'Perfect day to watch that series you\'ve been meaning to see.',
       icon: 'film'
+    });
+  }
+  
+  // Cloudy day suggestions
+  if (conditionLower.includes('cloud') && !conditionLower.includes('rain') && precipprob < 30) {
+    suggestions.push({
+      title: 'Urban Exploration',
+      description: 'Great day for visiting museums, galleries, or exploring a new neighborhood.',
+      icon: 'map'
     });
   }
   
@@ -169,18 +183,27 @@ export const getActivitySuggestions = (weather: WeatherDay): ActivitySuggestion[
   // Moderate temperature suggestions
   if (temp >= 10 && temp <= 20 && precipprob < 30) {
     suggestions.push({
-      title: 'Urban Exploration',
-      description: 'Great day for visiting museums, galleries, or exploring a new neighborhood.',
-      icon: 'map'
+      title: 'Outdoor Workout',
+      description: 'Comfortable temperature for running, cycling, or outdoor yoga.',
+      icon: 'heart'
     });
   }
   
   // Windy day suggestions
-  if (windspeed > 20) {
+  if (windspeed > 15) {
     suggestions.push({
       title: 'Kite Flying',
       description: 'Take advantage of the wind with kite flying or sailing.',
       icon: 'wind'
+    });
+  }
+  
+  // Snow day suggestions
+  if (conditionLower.includes('snow')) {
+    suggestions.push({
+      title: 'Winter Fun',
+      description: 'Build a snowman, go sledding, or enjoy a winter wonderland walk.',
+      icon: 'snowflake'
     });
   }
   
@@ -191,7 +214,14 @@ export const getActivitySuggestions = (weather: WeatherDay): ActivitySuggestion[
       description: 'A perfect day to focus on yourself - exercise, meditation, or a new hobby.',
       icon: 'heart'
     });
+    
+    suggestions.push({
+      title: 'Social Gathering',
+      description: 'Meet friends for coffee, dinner, or a game night.',
+      icon: 'users'
+    });
   }
   
-  return suggestions;
+  // Limit to 3 suggestions maximum
+  return suggestions.slice(0, 3);
 };
