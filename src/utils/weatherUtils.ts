@@ -3,19 +3,24 @@ import { WeatherDay, ActivitySuggestion } from '@/types/weatherTypes';
 import { toast } from '@/hooks/use-toast';
 
 // Use a working demo API key for Visual Crossing Weather API
-const API_KEY = "9XRCZN8USJ8NUBJZQEBDWH7WM"; 
+const API_KEY = "FY6ZD3PNJD4ZA9Y8RNNPVTBQQ"; 
 
 export const fetchWeatherData = async (location: string = "London", startDate: string, endDate: string) => {
   try {
     const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}/${startDate}/${endDate}?unitGroup=metric&include=days&key=${API_KEY}&contentType=json`;
     
+    console.log("Fetching weather data from:", url);
     const response = await fetch(url);
     
     if (!response.ok) {
-      throw new Error("Failed to fetch weather data");
+      const errorText = await response.text();
+      console.error("Weather API error:", response.status, errorText);
+      throw new Error(`Failed to fetch weather data: ${response.status} ${errorText}`);
     }
     
-    return await response.json();
+    const data = await response.json();
+    console.log("Weather data fetched successfully");
+    return data;
   } catch (error) {
     console.error("Error fetching weather data:", error);
     toast({
