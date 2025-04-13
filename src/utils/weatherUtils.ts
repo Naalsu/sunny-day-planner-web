@@ -1,12 +1,12 @@
 
-import { WeatherDay, ActivitySuggestion } from '@/types/weatherTypes';
+import { WeatherDay, ActivitySuggestion, WeatherData } from '@/types/weatherTypes';
 import { toast } from '@/hooks/use-toast';
 import { format, parseISO } from 'date-fns';
 
 // OpenWeatherMap API key
 const API_KEY = "7bd943fa58373bc02c5baaf8ee3d0477";
 
-export const fetchWeatherData = async (location: string = "London", startDate: string, endDate: string) => {
+export const fetchWeatherData = async (location: string = "London", startDate: string, endDate: string): Promise<WeatherData | null> => {
   try {
     // OpenWeatherMap 5-day forecast API (free tier limitation)
     const url = `https://api.openweathermap.org/data/2.5/forecast?q=${location}&units=metric&appid=${API_KEY}`;
@@ -24,7 +24,7 @@ export const fetchWeatherData = async (location: string = "London", startDate: s
     console.log("Weather data fetched successfully");
     
     // Transform OpenWeatherMap data to match our application's expected format
-    const transformedData = transformOpenWeatherMapData(data, location, startDate, endDate);
+    const transformedData = transformOpenWeatherMapData(data, location);
     return transformedData;
   } catch (error) {
     console.error("Error fetching weather data:", error);
@@ -38,11 +38,11 @@ export const fetchWeatherData = async (location: string = "London", startDate: s
 };
 
 // Transform OpenWeatherMap data to match our application's expected format
-const transformOpenWeatherMapData = (data, location, startDate, endDate) => {
-  const days = {};
+const transformOpenWeatherMapData = (data: any, location: string): WeatherData => {
+  const days: Record<string, WeatherDay> = {};
   
   // Process the forecast list and group by day
-  data.list.forEach(item => {
+  data.list.forEach((item: any) => {
     const date = item.dt_txt.split(' ')[0]; // Extract date part
     
     if (!days[date]) {
@@ -86,7 +86,7 @@ const transformOpenWeatherMapData = (data, location, startDate, endDate) => {
 };
 
 // Map OpenWeatherMap icons to our application's icon set
-const mapOpenWeatherIconToOurs = (condition) => {
+const mapOpenWeatherIconToOurs = (condition: string): string => {
   const conditionLower = condition.toLowerCase();
   
   if (conditionLower.includes('clear')) return 'clear-day';
