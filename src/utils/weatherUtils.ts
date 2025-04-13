@@ -1,13 +1,15 @@
 
 import { WeatherDay, ActivitySuggestion } from '@/types/weatherTypes';
 import { toast } from '@/hooks/use-toast';
+import { format, parseISO } from 'date-fns';
 
-// Use a working demo API key for Visual Crossing Weather API
-const API_KEY = "4QNGPVM7QBNSCGX2VVKBD9MWM"; 
+// OpenWeatherMap API key
+const API_KEY = "7bd943fa58373bc02c5baaf8ee3d0477";
 
 export const fetchWeatherData = async (location: string = "London", startDate: string, endDate: string) => {
   try {
-    const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}/${startDate}/${endDate}?unitGroup=metric&include=days&key=${API_KEY}&contentType=json`;
+    // OpenWeatherMap 5-day forecast API (free tier limitation)
+    const url = `https://api.openweathermap.org/data/2.5/forecast?q=${location}&units=metric&appid=${API_KEY}`;
     
     console.log("Fetching weather data from:", url);
     const response = await fetch(url);
@@ -20,7 +22,10 @@ export const fetchWeatherData = async (location: string = "London", startDate: s
     
     const data = await response.json();
     console.log("Weather data fetched successfully");
-    return data;
+    
+    // Transform OpenWeatherMap data to match our application's expected format
+    const transformedData = transformOpenWeatherMapData(data, location, startDate, endDate);
+    return transformedData;
   } catch (error) {
     console.error("Error fetching weather data:", error);
     toast({
@@ -30,6 +35,69 @@ export const fetchWeatherData = async (location: string = "London", startDate: s
     });
     return null;
   }
+};
+
+// Transform OpenWeatherMap data to match our application's expected format
+const transformOpenWeatherMapData = (data, location, startDate, endDate) => {
+  const days = {};
+  
+  // Process the forecast list and group by day
+  data.list.forEach(item => {
+    const date = item.dt_txt.split(' ')[0]; // Extract date part
+    
+    if (!days[date]) {
+      days[date] = {
+        datetime: date,
+        temp: item.main.temp,
+        tempmax: item.main.temp_max,
+        tempmin: item.main.temp_min,
+        conditions: item.weather[0].main,
+        icon: mapOpenWeatherIconToOurs(item.weather[0].main),
+        humidity: item.main.humidity,
+        precip: item.rain ? (item.rain['3h'] || 0) : 0,
+        precipprob: item.pop ? Math.round(item.pop * 100) : 0,
+        windspeed: item.wind.speed,
+        winddir: item.wind.deg,
+        cloudcover: item.clouds.all,
+        uvindex: 0, // OpenWeatherMap free tier doesn't provide UV index
+        sunrise: new Date(data.city.sunrise * 1000).toTimeString().substring(0, 5),
+        sunset: new Date(data.city.sunset * 1000).toTimeString().substring(0, 5),
+        moonphase: 0, // OpenWeatherMap free tier doesn't provide moon phase
+        description: item.weather[0].description
+      };
+    } else {
+      // Update min/max temps if needed
+      days[date].tempmax = Math.max(days[date].tempmax, item.main.temp_max);
+      days[date].tempmin = Math.min(days[date].tempmin, item.main.temp_min);
+      
+      // Update precipitation probability if higher
+      if (item.pop) {
+        days[date].precipprob = Math.max(days[date].precipprob, Math.round(item.pop * 100));
+      }
+    }
+  });
+  
+  return {
+    address: location,
+    days: Object.values(days),
+    timezone: data.city.timezone,
+    description: `Weather forecast for ${location}`
+  };
+};
+
+// Map OpenWeatherMap icons to our application's icon set
+const mapOpenWeatherIconToOurs = (condition) => {
+  const conditionLower = condition.toLowerCase();
+  
+  if (conditionLower.includes('clear')) return 'clear-day';
+  if (conditionLower.includes('cloud') && conditionLower.includes('scattered')) return 'partly-cloudy-day';
+  if (conditionLower.includes('cloud')) return 'cloudy';
+  if (conditionLower.includes('rain')) return 'rain';
+  if (conditionLower.includes('snow')) return 'snow';
+  if (conditionLower.includes('thunder')) return 'thunderstorm';
+  if (conditionLower.includes('mist') || conditionLower.includes('fog')) return 'fog';
+  
+  return 'clear-day'; // Default
 };
 
 export const getWeatherIcon = (icon: string) => {
