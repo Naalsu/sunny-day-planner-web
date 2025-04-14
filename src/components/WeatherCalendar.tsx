@@ -15,6 +15,7 @@ const WeatherCalendar: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   
   const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   
@@ -41,7 +42,14 @@ const WeatherCalendar: React.FC = () => {
   };
   
   const handleSelectDate = (date: Date) => {
-    setSelectedDate(date);
+    // If same date is clicked again, toggle details
+    if (isSameDay(date, selectedDate)) {
+      setIsDetailsOpen(!isDetailsOpen);
+    } else {
+      // Different date, select it and show details
+      setSelectedDate(date);
+      setIsDetailsOpen(true);
+    }
   };
   
   const getWeatherForDay = (date: Date): WeatherDay | undefined => {
@@ -108,28 +116,28 @@ const WeatherCalendar: React.FC = () => {
             <div
               key={day.toString()}
               className={cn(
-                "calendar-day",
-                isToday && "today",
-                isSelected && "selected",
-                !isCurrentMonth && "outside-month"
+                "p-2 rounded-md cursor-pointer transition-all duration-150 hover:bg-accent/50",
+                isToday && "bg-accent/40 font-bold",
+                isSelected && "bg-primary/10 border border-primary/30",
+                !isCurrentMonth && "opacity-40",
+                "flex flex-col items-center"
               )}
               onClick={() => handleSelectDate(day)}
             >
-              <div className="text-sm font-medium">
+              <div className="text-sm font-medium mb-1">
                 {format(day, 'd')}
               </div>
               
               {loading ? (
-                <Skeleton className="w-6 h-6 rounded-full absolute top-1 right-1" />
+                <Skeleton className="w-6 h-6 rounded-full" />
               ) : dayWeather ? (
                 <>
-                  <div className="weather-icon-sm">
+                  <div className="mb-1">
                     {renderWeatherIcon(dayWeather.icon)}
                   </div>
-                  <div className="weather-temp mt-2">
-                    <span className="high-temp">{Math.round(dayWeather.tempmax)}°</span>
-                    {' / '}
-                    <span className="low-temp">{Math.round(dayWeather.tempmin)}°</span>
+                  <div className="text-xs">
+                    <span className="font-medium">{Math.round(dayWeather.tempmax)}°</span>
+                    <span className="text-muted-foreground">/{Math.round(dayWeather.tempmin)}°</span>
                   </div>
                 </>
               ) : null}
@@ -180,7 +188,9 @@ const WeatherCalendar: React.FC = () => {
       <DayDetails 
         date={selectedDate} 
         weatherDay={getWeatherForDay(selectedDate)} 
-        loading={loading} 
+        loading={loading}
+        isOpen={isDetailsOpen}
+        onToggle={() => setIsDetailsOpen(!isDetailsOpen)}
       />
     </div>
   );
