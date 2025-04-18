@@ -1,73 +1,104 @@
-# Welcome to your Lovable project
 
-## Project info
+# Weather Calendar Application
 
-**URL**: https://lovable.dev/projects/56388c5e-9073-439c-90a4-9991ff7bb064
+A dynamic weather calendar application that displays weather forecasts with detailed daily information and activity suggestions based on weather conditions.
 
-## How can I edit this code?
+## Features
 
-There are several ways of editing your application.
+- Interactive calendar interface with daily weather information
+- Detailed weather data including temperature, humidity, wind speed, and more
+- Activity suggestions based on weather conditions
+- Collapsible daily weather details
+- Responsive design for all device sizes
+- Intuitive weather icons and visual indicators
 
-**Use Lovable**
+## Tech Stack
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/56388c5e-9073-439c-90a4-9991ff7bb064) and start prompting.
+### Core Technologies
+- TypeScript 5.x
+- React 18.x
+- Vite (Build tool)
+- SWC (Compiler)
 
-Changes made via Lovable will be committed automatically to this repo.
+### UI & Styling
+- Tailwind CSS
+- shadcn/ui (Component library)
+- Radix UI (Headless components)
+- Lucide React (Icon library)
 
-**Use your preferred IDE**
+### State Management & Data
+- TanStack Query (React Query v5)
+- React Hook Form
+- Zod (Schema validation)
+- date-fns (Date manipulation)
+- react-day-picker (Calendar component)
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Routing
+- React Router DOM v6
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Testing Tools & Quality Assurance
+- Vitest (Unit testing)
+- React Testing Library (Component testing)
+- TypeScript (Static type checking)
+- ESLint (Code linting)
+- Prettier (Code formatting)
 
-Follow these steps:
+## Getting Started
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+1. Clone the repository
+```bash
+git clone <repository-url>
+```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+2. Install dependencies
+```bash
+npm install
+```
 
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+3. Start the development server
+```bash
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+4. Open your browser and navigate to `http://localhost:8080`
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Available Scripts
 
-**Use GitHub Codespaces**
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run test` - Run tests
+- `npm run lint` - Run ESLint
+- `npm run preview` - Preview production build
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## Project Structure
 
-## What technologies are used for this project?
+```
+src/
+  ├── components/        # React components
+  ├── hooks/            # Custom React hooks
+  ├── pages/            # Page components
+  ├── types/            # TypeScript type definitions
+  ├── utils/            # Utility functions
+  └── lib/             # Shared libraries
+```
 
-This project is built with:
+## Environment Variables
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+Create a `.env` file in the root directory with the following variables:
 
-## How can I deploy this project?
+```
+VITE_API_KEY=your_weather_api_key
+```
 
-Simply open [Lovable](https://lovable.dev/projects/56388c5e-9073-439c-90a4-9991ff7bb064) and click on Share -> Publish.
+## Contributing
 
-## Can I connect a custom domain to my Lovable project?
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-Yes it is!
+## License
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
